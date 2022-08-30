@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/rocketlauncherModern.obj-7ae502993b660688641671dbaf05be87.mesh"
+
+[deps]
+
+files=[ "res://.import/rocketlauncherModern.obj-7ae502993b660688641671dbaf05be87.mesh" ]
+
+source_file="res://Assets/Models/rocketlauncherModern.obj"
+dest_files=[ "res://.import/rocketlauncherModern.obj-7ae502993b660688641671dbaf05be87.mesh", "res://.import/rocketlauncherModern.obj-7ae502993b660688641671dbaf05be87.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286
