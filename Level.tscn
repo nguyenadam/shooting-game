@@ -1,36 +1,94 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Animated-3D-Robot-9b67ca7ac428366c56e5466622d3557588809ca8/Better Collada (Godot)/Main.material" type="Material" id=2]
 [ext_resource path="res://Level.gd" type="Script" id=3]
 
 [sub_resource type="CubeMesh" id=1]
 
+[sub_resource type="SpatialMaterial" id=5]
+albedo_color = Color( 0.156863, 0.584314, 0.145098, 1 )
+ao_enabled = true
+ao_light_affect = 0.0
+ao_on_uv2 = false
+ao_texture_channel = 0
+depth_enabled = true
+depth_scale = 0.05
+depth_deep_parallax = false
+depth_flip_tangent = false
+depth_flip_binormal = false
+
 [sub_resource type="ConcavePolygonShape" id=2]
 data = PoolVector3Array( -1, 1, 1, 1, 1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, -1, 1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1, 1, 1, -1, 1, -1, 1, 1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, 1, -1, 1, 1, -1, -1, -1, -1, -1 )
+
+[sub_resource type="CylinderMesh" id=3]
+
+[sub_resource type="CylinderShape" id=4]
+
+[sub_resource type="SpatialMaterial" id=6]
+albedo_color = Color( 0.54902, 0.341176, 0.341176, 1 )
 
 [node name="Spatial" type="Spatial"]
 script = ExtResource( 3 )
 
-[node name="Player" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.205, 0, 1 )
-
-[node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( 10, 0, 0, 0, 0.5, 0, 0, 0, 10, 0, -1.07847, 0 )
+[node name="Grass" type="MeshInstance" parent="."]
+transform = Transform( 30, 0, 0, 0, 0.5, 0, 0, 0, 30, 0.456704, -0.865341, -0.382173 )
 mesh = SubResource( 1 )
-material/0 = ExtResource( 2 )
+material/0 = SubResource( 5 )
 
-[node name="StaticBody" type="StaticBody" parent="MeshInstance"]
+[node name="StaticBody" type="StaticBody" parent="Grass"]
 
-[node name="CollisionShape" type="CollisionShape" parent="MeshInstance/StaticBody"]
+[node name="CollisionShape" type="CollisionShape" parent="Grass/StaticBody"]
 shape = SubResource( 2 )
 
-[node name="MeshInstance2" type="MeshInstance" parent="."]
-transform = Transform( 9.45768, 0.162421, 0, -3.24842, 0.472884, 0, 0, 0, 10, -17.4967, 2.23161, 0 )
+[node name="Wall" type="MeshInstance" parent="."]
+transform = Transform( -4.37114e-07, 0.5, 0, -10, -2.18557e-08, 0, 0, 0, 30, -17.4064, 1.71849, -0.346592 )
 mesh = SubResource( 1 )
 material/0 = ExtResource( 2 )
 
-[node name="StaticBody" type="StaticBody" parent="MeshInstance2"]
+[node name="StaticBody" type="StaticBody" parent="Wall"]
 
-[node name="CollisionShape" type="CollisionShape" parent="MeshInstance2/StaticBody"]
+[node name="CollisionShape" type="CollisionShape" parent="Wall/StaticBody"]
+shape = SubResource( 2 )
+
+[node name="Pillar" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 5, 0, 0, 0, 1, -2.78756, 0.993157, 6.79271 )
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="Pillar"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Pillar/StaticBody"]
+shape = SubResource( 4 )
+
+[node name="Fence" type="MeshInstance" parent="."]
+transform = Transform( -0.1, -2.59875e-06, 0, 8.66252e-08, -3, 0, 0, 0, 30, 29.2983, -1.02261, 0 )
+mesh = SubResource( 1 )
+skeleton = NodePath("../Wall")
+material/0 = SubResource( 6 )
+
+[node name="StaticBody" type="StaticBody" parent="Fence"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Fence/StaticBody"]
+shape = SubResource( 2 )
+
+[node name="Fence2" type="MeshInstance" parent="."]
+transform = Transform( 4.37114e-09, -1.14641e-14, 30, -8.74228e-09, -3, 0, 0.1, -2.62268e-07, -1.31134e-06, 1.31887, -1.02261, -29.6549 )
+mesh = SubResource( 1 )
+skeleton = NodePath("../Wall")
+material/0 = SubResource( 6 )
+
+[node name="StaticBody" type="StaticBody" parent="Fence2"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Fence2/StaticBody"]
+shape = SubResource( 2 )
+
+[node name="Fence3" type="MeshInstance" parent="."]
+transform = Transform( 4.37114e-09, -1.14641e-14, 30, -8.74228e-09, -3, 0, 0.1, -2.62268e-07, -1.31134e-06, 1.31887, -1.02261, 28.9393 )
+mesh = SubResource( 1 )
+skeleton = NodePath("../Wall")
+material/0 = SubResource( 6 )
+
+[node name="StaticBody" type="StaticBody" parent="Fence3"]
+
+[node name="CollisionShape" type="CollisionShape" parent="Fence3/StaticBody"]
 shape = SubResource( 2 )

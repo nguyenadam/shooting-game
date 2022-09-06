@@ -13,7 +13,7 @@ var my_pos
 func _ready():
 	pass # Replace with function body.
 
-func load_server(peers):
+remote func load_server(peers):
 	my_peers = peers
 	is_server = true
 	for i in range(peers.size()):
@@ -29,7 +29,10 @@ func load_server(peers):
 			my_pos = player.global_transform.origin
 			player.name = "Server"
 			player.local_control = true
-			$Server/SpringArm/Camera.make_current()
+			#print("Setting camera!")
+			#get_node("/root/NetworkSetup/Spatial/Server/SpringArm/Camera").make_current()
+			#$Server/SpringArm/Camera.make_current()
+	get_node("/root/NetworkSetup/Spatial/Server/SpringArm/Camera").make_current()
 
 func load_client(peers):
 	my_peers = peers
@@ -47,7 +50,10 @@ func load_client(peers):
 			my_pos = player.global_transform.origin
 			player.name = "Me"
 			player.local_control = true
-			$Me/SpringArm/Camera.make_current()
+			#get_node(str(i) + "/SpringArm/Camera").make_current()
+			#print("Loading client camera: " + str(peers[i]))
+			#/$Me/SpringArm/Camera.make_current()
+	get_node("/root/NetworkSetup/Spatial/Me/SpringArm/Camera").make_current()
 
 remotesync func try_move(peer, pos):
 	# validate here
@@ -68,6 +74,7 @@ remotesync func try_shoot_gun(peer, location):
 		
 		print("Server detects shooting from " + str(location))
 		rpc("shoot_gun", location)
+		print("Using camera " + str(get_node("/root/NetworkSetup/Spatial/Server/SpringArm/Camera").current))
 
 
 remotesync func shoot_gun(location):
