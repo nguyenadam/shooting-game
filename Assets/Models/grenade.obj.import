@@ -16,5 +16,4 @@ dest_files=[ "res://.import/grenade.obj-f10ac2dc9e8c48d6a0c967d77f651bb2.mesh", 
 generate_tangents=true
 scale_mesh=Vector3( 1, 1, 1 )
 offset_mesh=Vector3( 0, 0, 0 )
-octahedral_compression=true
-optimize_mesh_flags=4286
+optimize_mesh=true

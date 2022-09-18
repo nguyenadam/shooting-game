@@ -16,5 +16,4 @@ dest_files=[ "res://.import/ammo_sniper.obj-899263a10e743fc78a95cdfdcc7501e7.mes
 generate_tangents=true
 scale_mesh=Vector3( 1, 1, 1 )
 offset_mesh=Vector3( 0, 0, 0 )
-octahedral_compression=true
-optimize_mesh_flags=4286
+optimize_mesh=true

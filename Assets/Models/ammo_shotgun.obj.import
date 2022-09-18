@@ -16,5 +16,4 @@ dest_files=[ "res://.import/ammo_shotgun.obj-f5083e01b6d75c2e910312f72b6caf55.me
 generate_tangents=true
 scale_mesh=Vector3( 1, 1, 1 )
 offset_mesh=Vector3( 0, 0, 0 )
-octahedral_compression=true
-optimize_mesh_flags=4286
+optimize_mesh=true
