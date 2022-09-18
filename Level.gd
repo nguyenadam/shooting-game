@@ -61,21 +61,19 @@ remotesync func try_move(peer, pos):
 		rpc_unreliable("set_new_pos", peer, pos)
 
 remotesync func set_new_pos(peer, pos):
-	var player = players[my_peers.find(peer)]
-	player.global_transform.origin.x = pos[0]
-	player.global_transform.origin.y = pos[1]
-	player.global_transform.origin.z = pos[2]
-	player._model.rotation.y = pos[3]
+	if peer != get_tree().get_network_unique_id():
+		var player = players[my_peers.find(peer)]
+		player.global_transform.origin.x = pos[0]
+		player.global_transform.origin.y = pos[1]
+		player.global_transform.origin.z = pos[2]
+		player._model.rotation.y = pos[3]
+		player._velocity = Vector3.ZERO
 #		player.global_position = (0, 0, 1)#Vector3(1 * i, 0, 2 * i)
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 
 remotesync func try_shoot_gun(peer, location):
 	if is_server:
-		
 		print("Server detects shooting from " + str(location))
 		rpc("shoot_gun", location)
-		print("Using camera " + str(get_node("/root/NetworkSetup/Spatial/Server/SpringArm/Camera").current))
-
 
 remotesync func shoot_gun(location):
 	var b = bullet.instance()
