@@ -45,6 +45,11 @@ func _physics_process(delta:float)->void:
 			_model.rotation.y = look_direction.angle()
 
 		_velocity = move_and_slide_with_snap(_velocity, _snap_vector, Vector3.UP, true)
+		
+		if _velocity != Vector3.ZERO:
+			$Robot/AnimationPlayer.play("Robot_Running")
+		else:
+			$Robot/AnimationPlayer.play("Robot_Idle")
 			
 	else:
 		# just fall down
