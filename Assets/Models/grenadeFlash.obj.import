@@ -16,5 +16,4 @@ dest_files=[ "res://.import/grenadeFlash.obj-6e353216681caa1e0535354658b4b05c.me
 generate_tangents=true
 scale_mesh=Vector3( 1, 1, 1 )
 offset_mesh=Vector3( 0, 0, 0 )
-octahedral_compression=true
-optimize_mesh_flags=4286
+optimize_mesh=true

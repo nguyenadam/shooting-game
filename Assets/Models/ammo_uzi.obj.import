@@ -16,5 +16,4 @@ dest_files=[ "res://.import/ammo_uzi.obj-79c7df9febbf5b73cae18953bb0efc25.mesh",
 generate_tangents=true
 scale_mesh=Vector3( 1, 1, 1 )
 offset_mesh=Vector3( 0, 0, 0 )
-octahedral_compression=true
-optimize_mesh_flags=4286
+optimize_mesh=true

@@ -58,9 +58,10 @@ func load_client(peers):
 remotesync func try_move(peer, pos):
 	# validate here
 	if is_server:
-		rpc_unreliable("set_new_pos", peer, pos)
+		rpc("set_new_pos", peer, pos)
 
 remotesync func set_new_pos(peer, pos):
+
 	if peer != get_tree().get_network_unique_id():
 		var player = players[my_peers.find(peer)]
 		player.global_transform.origin.x = pos[0]
@@ -68,7 +69,7 @@ remotesync func set_new_pos(peer, pos):
 		player.global_transform.origin.z = pos[2]
 		player._model.rotation.y = pos[3]
 		player._velocity = Vector3.ZERO
-#		player.global_position = (0, 0, 1)#Vector3(1 * i, 0, 2 * i)
+
 
 remotesync func try_shoot_gun(peer, location):
 	if is_server:
@@ -82,10 +83,11 @@ remotesync func shoot_gun(location):
 	b.velocity = b.transform.basis.z * b.muzzle_velocity
 
 func _process(delta):
-	if my_person.global_transform.origin != my_pos:
+	if (my_person.global_transform.origin - my_pos).length_squared() > Vector3(.1, .1, .1).length_squared():
+		print(str(my_person.global_transform.origin) + " " + str(my_pos))
 		my_pos = my_person.global_transform.origin
 		var rotation = my_person._model.rotation.y
-		rpc_unreliable("try_move", get_tree().get_network_unique_id(), [my_pos.x, my_pos.y, my_pos.z, rotation])
+		rpc("try_move", get_tree().get_network_unique_id(), [my_pos.x, my_pos.y, my_pos.z, rotation])
 	if my_person.shoot:
 		my_person.shoot = false
 		rpc("try_shoot_gun", get_tree().get_network_unique_id(), my_person.muzzle_location)
