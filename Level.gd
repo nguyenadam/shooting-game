@@ -1,3 +1,18 @@
+# This file contains the main code for initializing the world and managing
+# player communication.
+#
+# Contents:
+# Setup
+#   load_server
+#   load_client
+# RPC Calls
+#   try_move
+#   set_new_pos
+#   try_shoot_gun
+#   shoot_gun
+#   try_animate
+#   set_new_animation
+
 extends Spatial
 
 var id
@@ -8,10 +23,6 @@ var bullet = preload("res://Bullet.tscn")
 var is_server = false
 var my_person
 var my_pos
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
 
 remote func load_server(peers):
 	my_peers = peers
@@ -57,10 +68,12 @@ func load_client(peers):
 
 remotesync func try_move(peer, pos):
 	# validate here
+	var isValid = true
+	
 	if is_server:
-		rpc("set_new_pos", peer, pos)
+		rpc("set_new_pos", peer, pos, isValid)
 
-remotesync func set_new_pos(peer, pos):
+remotesync func set_new_pos(peer, pos, isValid):
 
 	if peer != get_tree().get_network_unique_id():
 		var player = players[my_peers.find(peer)]
@@ -69,7 +82,9 @@ remotesync func set_new_pos(peer, pos):
 		player.global_transform.origin.z = pos[2]
 		player._model.rotation.y = pos[3]
 		player._velocity = Vector3.ZERO
-
+	
+	if !isValid and peer == get_tree().get_network_unique_id():
+		print("You are in an illegal position.")
 
 remotesync func try_shoot_gun(peer, location):
 	if is_server:
@@ -81,9 +96,26 @@ remotesync func shoot_gun(location):
 	add_child(b)
 	b.global_transform = location
 	b.velocity = b.transform.basis.z * b.muzzle_velocity
+	
+remotesync func try_animate(peer, animation):
+	# validate here
+	var isValid = true
+	
+	if is_server:
+		rpc("set_new_animation", peer, animation, isValid)
+
+remotesync func set_new_animation(peer, animation, isValid):
+
+	if peer != get_tree().get_network_unique_id():
+		var player = players[my_peers.find(peer)]
+		player.play_animation(animation)
+	
+	if !isValid and peer == get_tree().get_network_unique_id():
+		print("You are doing an illegal animation.")
 
 func _process(delta):
-	if (my_person.global_transform.origin - my_pos).length_squared() > Vector3(.1, .1, .1).length_squared():
+	#if (my_person.global_transform.origin - my_pos).length_squared() > Vector3(.1, .1, .1).length_squared():
+	if my_person.global_transform.origin != my_pos:
 		print(str(my_person.global_transform.origin) + " " + str(my_pos))
 		my_pos = my_person.global_transform.origin
 		var rotation = my_person._model.rotation.y
@@ -91,3 +123,5 @@ func _process(delta):
 	if my_person.shoot:
 		my_person.shoot = false
 		rpc("try_shoot_gun", get_tree().get_network_unique_id(), my_person.muzzle_location)
+	if my_person.animation_changed:
+		rpc("try_animate", get_tree().get_network_unique_id(), my_person.current_animation)
