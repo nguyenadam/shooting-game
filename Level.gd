@@ -116,7 +116,6 @@ remotesync func set_new_animation(peer, animation, isValid):
 func _process(delta):
 	#if (my_person.global_transform.origin - my_pos).length_squared() > Vector3(.1, .1, .1).length_squared():
 	if my_person.global_transform.origin != my_pos:
-		print(str(my_person.global_transform.origin) + " " + str(my_pos))
 		my_pos = my_person.global_transform.origin
 		var rotation = my_person._model.rotation.y
 		rpc("try_move", get_tree().get_network_unique_id(), [my_pos.x, my_pos.y, my_pos.z, rotation])
