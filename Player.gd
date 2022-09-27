@@ -85,6 +85,13 @@ func _physics_process(delta:float)->void:
 func play_animation(animation):
 	$Robot/AnimationPlayer.play(animation)
 
+func set_color_black():
+	var parts = $Robot/RobotArmature/Skeleton.get_children()
+	for part in parts:
+		part.set_surface_material(0, load("res://Assets/Animated-3D-Robot-9b67ca7ac428366c56e5466622d3557588809ca8/Better Collada (Godot)/Black.material"))
+	$Robot/RobotArmature/Skeleton/Torso.set_surface_material(0, load("res://Assets/Animated-3D-Robot-9b67ca7ac428366c56e5466622d3557588809ca8/Better Collada (Godot)/Black.material"))
+	$Robot/RobotArmature/Skeleton/Torso.set_surface_material(0, load("res://Assets/Animated-3D-Robot-9b67ca7ac428366c56e5466622d3557588809ca8/Better Collada (Godot)/Black.material"))
+
 func _process(_delta)->void: 
 	if _spring_arm != null:
 		_spring_arm.translation = translation

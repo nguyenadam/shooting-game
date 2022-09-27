@@ -24,6 +24,8 @@ var is_server = false
 var my_person
 var my_pos
 
+var _timer = null
+
 remote func load_server(peers):
 	my_peers = peers
 	is_server = true
@@ -43,6 +45,8 @@ remote func load_server(peers):
 			#print("Setting camera!")
 			#get_node("/root/NetworkSetup/Spatial/Server/SpringArm/Camera").make_current()
 			#$Server/SpringArm/Camera.make_current()
+		else:
+			player.set_color_black()
 	get_node("/root/NetworkSetup/Spatial/Server/SpringArm/Camera").make_current()
 
 func load_client(peers):
@@ -64,7 +68,10 @@ func load_client(peers):
 			#get_node(str(i) + "/SpringArm/Camera").make_current()
 			#print("Loading client camera: " + str(peers[i]))
 			#/$Me/SpringArm/Camera.make_current()
+		if (peers[i] != 1):
+			player.set_color_black()
 	get_node("/root/NetworkSetup/Spatial/Me/SpringArm/Camera").make_current()
+	
 
 remotesync func try_move(peer, pos):
 	# validate here
@@ -115,8 +122,19 @@ remotesync func set_new_animation(peer, animation, isValid):
 
 func _process(delta):
 	#if (my_person.global_transform.origin - my_pos).length_squared() > Vector3(.1, .1, .1).length_squared():
+#	if my_person.global_transform.origin != my_pos:
+#		my_pos = my_person.global_transform.origin
+#		var rotation = my_person._model.rotation.y
+#		rpc("try_move", get_tree().get_network_unique_id(), [my_pos.x, my_pos.y, my_pos.z, rotation])
+#	if my_person.shoot:
+#		my_person.shoot = false
+#		rpc("try_shoot_gun", get_tree().get_network_unique_id(), my_person.muzzle_location)
+#	if my_person.animation_changed:
+#		rpc("try_animate", get_tree().get_network_unique_id(), my_person.current_animation)
+	pass
+
+func _on_Timer_timeout():
 	if my_person.global_transform.origin != my_pos:
-		print(str(my_person.global_transform.origin) + " " + str(my_pos))
 		my_pos = my_person.global_transform.origin
 		var rotation = my_person._model.rotation.y
 		rpc("try_move", get_tree().get_network_unique_id(), [my_pos.x, my_pos.y, my_pos.z, rotation])
@@ -125,3 +143,12 @@ func _process(delta):
 		rpc("try_shoot_gun", get_tree().get_network_unique_id(), my_person.muzzle_location)
 	if my_person.animation_changed:
 		rpc("try_animate", get_tree().get_network_unique_id(), my_person.current_animation)
+
+func _ready():
+	_timer = Timer.new()
+	add_child(_timer)
+	
+	_timer.connect("timeout", self, "_on_Timer_timeout")
+	_timer.set_wait_time(0.5)
+	_timer.set_one_shot(false) # Make sure it loops
+	_timer.start()
