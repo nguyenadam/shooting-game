@@ -84,11 +84,21 @@ remotesync func set_new_pos(peer, pos, isValid):
 
 	if peer != get_tree().get_network_unique_id():
 		var player = players[my_peers.find(peer)]
-		player.global_transform.origin.x = pos[0]
-		player.global_transform.origin.y = pos[1]
-		player.global_transform.origin.z = pos[2]
+		player.old_position.x = player.new_position.x
+		player.old_position.y = player.new_position.y
+		player.old_position.z = player.new_position.z
+#		player.global_transform.origin.x = pos[0]
+#		player.global_transform.origin.y = pos[1]
+#		player.global_transform.origin.z = pos[2]
+#		player._model.rotation.y = pos[3]
+#		player._velocity = pos[4]
+		player.new_position.x = pos[0]
+		player.new_position.y = pos[1]
+		player.new_position.z = pos[2]
 		player._model.rotation.y = pos[3]
-		#player._velocity = pos[4]
+		player._velocity = player.new_velocity
+		player.new_velocity = pos[4]
+		player.time_since_last_update = 0
 	
 	if !isValid and peer == get_tree().get_network_unique_id():
 		print("You are in an illegal position.")
@@ -134,11 +144,11 @@ func _process(delta):
 	pass
 
 func _on_Timer_timeout():
-	if my_person.global_transform.origin != my_pos:
-		my_pos = my_person.global_transform.origin
-		var rotation = my_person._model.rotation.y
-		var velocity = my_person._velocity
-		rpc("try_move", get_tree().get_network_unique_id(), [my_pos.x, my_pos.y, my_pos.z, rotation, velocity])
+#	if my_person.global_transform.origin != my_pos:
+	my_pos = my_person.global_transform.origin
+	var rotation = my_person._model.rotation.y
+	var velocity = my_person._velocity
+	rpc("try_move", get_tree().get_network_unique_id(), [my_pos.x, my_pos.y, my_pos.z, rotation, velocity])
 	if my_person.shoot:
 		my_person.shoot = false
 		rpc("try_shoot_gun", get_tree().get_network_unique_id(), my_person.muzzle_location)

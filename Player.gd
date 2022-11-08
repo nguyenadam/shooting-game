@@ -5,6 +5,11 @@ export var jump_force:float = 16.0
 export var gravity:float = 50.0
 export(NodePath) onready var _spring_arm = $SpringArm as SpringArm
 
+var new_velocity := Vector3.ZERO
+var new_position := Vector3.ZERO
+var old_position := Vector3.ZERO
+var time_since_last_update := 0.0
+
 var _velocity := Vector3.ZERO
 var _snap_vector := Vector3.DOWN
 var is_in_jump := false
@@ -55,6 +60,8 @@ func _physics_process(delta:float)->void:
 		if Vector2(_velocity.z, _velocity.x).length() > 0.2:
 			var look_direction = Vector2(_velocity.z, _velocity.x)
 			_model.rotation.y = look_direction.angle()
+		
+		
 
 		_velocity = move_and_slide_with_snap(_velocity, _snap_vector, Vector3.UP, true)
 		
@@ -79,7 +86,17 @@ func _physics_process(delta:float)->void:
 		# just fall down
 		_velocity.y -= gravity * delta
 		_snap_vector = Vector3.DOWN
-		_velocity = move_and_slide_with_snap(_velocity, _snap_vector, Vector3.UP, true)
+		
+		time_since_last_update += delta
+		var percentage_complete = time_since_last_update / 0.5
+		var blended_velocity:Vector3 = _velocity + ((new_velocity - _velocity) * percentage_complete)
+		var projection1 = old_position + blended_velocity * time_since_last_update
+		var projection2 = new_position + new_velocity * time_since_last_update
+		var interpolated_position = projection1 + (projection2 - projection1) * percentage_complete
+		
+		var move_vector = interpolated_position - global_transform.origin
+		
+		move_and_slide_with_snap(move_vector, _snap_vector, Vector3.UP, true)
 	pass
 
 func play_animation(animation):
