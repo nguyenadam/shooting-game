@@ -10,7 +10,7 @@ var ip_address = ""
 var player_count = 0
 
 func _ready() -> void:
-	ip_address = IP.get_local_addresses()[3]
+	ip_address = IP.get_local_addresses()[0]
 	print("Possible Addresses: " + str(IP.get_local_addresses()))
 	print("Selected: " + ip_address)
 

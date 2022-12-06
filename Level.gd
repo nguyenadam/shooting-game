@@ -91,11 +91,13 @@ remotesync func set_new_pos(peer, pos, isValid):
 #		player.global_transform.origin.y = pos[1]
 #		player.global_transform.origin.z = pos[2]
 #		player._model.rotation.y = pos[3]
+		player.potential_rotation = pos[3]
 #		player._velocity = pos[4]
 		player.new_position.x = pos[0]
 		player.new_position.y = pos[1]
 		player.new_position.z = pos[2]
-		player._model.rotation.y = pos[3]
+		# player._model.rotation.y = pos[3]
+		player.old_rotation = player.rotation.y
 		player._velocity = player.new_velocity
 		player.new_velocity = pos[4]
 		player.time_since_last_update = 0

@@ -57,11 +57,11 @@ func _on_JoinServer_pressed():
 		Network.join_server()
 		print("Joined Server")
 	else:
+		print("Server IP Address Not Provided. Sending to local: " + Network.ip_address)
 		multiplayer_config_ui.hide()
 		$Text.show()
 		Network.join_server()
 		print("Joined Server")
-		print("Server IP Address Invalid. Sending to local")
 
 remote func game_starting(peers):
 	# loads a copy of the game on each device

@@ -9,6 +9,8 @@ var new_velocity := Vector3.ZERO
 var new_position := Vector3.ZERO
 var old_position := Vector3.ZERO
 var time_since_last_update := 0.0
+var old_rotation := 0.0
+var potential_rotation := 0.0
 
 var _velocity := Vector3.ZERO
 var _snap_vector := Vector3.DOWN
@@ -88,13 +90,20 @@ func _physics_process(delta:float)->void:
 		_snap_vector = Vector3.DOWN
 		
 		time_since_last_update += delta
-		var percentage_complete = time_since_last_update / 0.5
+		var percentage_complete = pow((time_since_last_update / 0.5), 1 / 3) # fancy function
 		var blended_velocity:Vector3 = _velocity + ((new_velocity - _velocity) * percentage_complete)
 		var projection1 = old_position + blended_velocity * time_since_last_update
 		var projection2 = new_position + new_velocity * time_since_last_update
 		var interpolated_position = projection1 + (projection2 - projection1) * percentage_complete
 		
 		var move_vector = interpolated_position - global_transform.origin
+		
+		if new_velocity.length() > 0.2:
+			var look_direction = Vector2(move_vector.z, move_vector.x)
+			_model.rotation.y = look_direction.angle()
+		else:
+			var blended_rotation = old_rotation + (potential_rotation - old_rotation) * percentage_complete
+			_model.rotation.y = blended_rotation
 		
 		move_and_slide_with_snap(move_vector, _snap_vector, Vector3.UP, true)
 	pass
